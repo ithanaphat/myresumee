@@ -3,2138 +3,1257 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Dark Soul</title>
+<title>F1 NIGHT RACE</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Prompt:wght@400;600;700&display=swap');
 
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
+    user-select:none;
 }
 
 body{
-    background:#050505;
-    color:#ddd;
-    font-family:'Cinzel',serif;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 50% 20%,#202b46,#070a12 60%);
+    color:white;
+    font-family:Prompt,sans-serif;
     overflow:hidden;
 }
 
-canvas{
-    display:block;
-    width:100vw;
+.game{
+    width:min(1100px,100%);
     height:100vh;
-    background:#08090b;
+    margin:auto;
+    display:flex;
+    flex-direction:column;
+    padding:14px;
 }
 
-#ui{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
+/* HEADER */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 14px;
+    z-index:5;
 }
 
-/* TOP HUD */
-
-.hud{
-    position:absolute;
-    top:22px;
-    left:25px;
-    width:330px;
+.logo{
+    font-family:Orbitron;
+    font-weight:900;
+    font-size:clamp(1.5rem,4vw,2.5rem);
+    font-style:italic;
+    letter-spacing:3px;
+    color:#fff;
+    text-shadow:0 0 15px #e10600;
 }
 
-.player-name{
-    color:#ddd;
-    font-size:14px;
-    margin-bottom:7px;
-    letter-spacing:2px;
-    text-shadow:0 2px 4px #000;
+.logo span{
+    color:#e10600;
 }
 
-.bar{
-    height:17px;
-    background:#171717;
-    border:2px solid #777;
-    margin-bottom:7px;
-    box-shadow:0 2px 8px #000;
+.stats{
+    display:flex;
+    gap:8px;
 }
 
-.bar-inner{
-    height:100%;
-    transition:width .15s;
-}
-
-.hp{
-    background:linear-gradient(
-        90deg,
-        #5b0000,
-        #bd1d1d,
-        #e34242
-    );
-}
-
-.stamina{
-    background:linear-gradient(
-        90deg,
-        #536900,
-        #a7c72c,
-        #d5ec57
-    );
-}
-
-.hud-label{
-    position:absolute;
-    font-size:10px;
-    left:8px;
-    margin-top:1px;
-    color:#eee;
-    text-shadow:0 1px 3px #000;
-}
-
-/* BOSS */
-
-.boss-ui{
-    position:absolute;
-    bottom:35px;
-    left:50%;
-    transform:translateX(-50%);
-    width:min(650px,80vw);
+.stat{
+    min-width:90px;
+    padding:7px 12px;
+    border-radius:9px;
+    background:rgba(15,23,42,.8);
+    border:1px solid rgba(255,255,255,.1);
     text-align:center;
-    display:none;
 }
 
-.boss-name{
-    color:#d5b27a;
-    font-size:18px;
-    letter-spacing:4px;
-    margin-bottom:8px;
-    text-shadow:0 2px 6px #000;
+.stat small{
+    display:block;
+    color:#94a3b8;
+    font-size:.6rem;
+    letter-spacing:1px;
 }
 
-.boss-bar{
-    height:20px;
-    border:2px solid #777;
+.stat strong{
+    font-family:Orbitron;
+    font-size:1rem;
+}
+
+/* TRACK */
+
+.track-wrap{
+    position:relative;
+    flex:1;
+    min-height:0;
+    border-radius:20px;
+    overflow:hidden;
+    border:3px solid #252b3a;
+    box-shadow:
+        0 0 0 2px #111827,
+        0 20px 70px rgba(0,0,0,.7);
+}
+
+canvas{
+    width:100%;
+    height:100%;
+    display:block;
     background:#111;
 }
 
-.boss-hp{
-    height:100%;
-    background:linear-gradient(
-        90deg,
-        #3d0505,
-        #8f1111,
-        #d52c2c
-    );
-}
+/* OVERLAY */
 
-/* SOULS */
-
-.souls{
-    position:absolute;
-    right:30px;
-    top:25px;
-    color:#e8d59b;
-    font-size:18px;
-    text-shadow:0 2px 5px #000;
-}
-
-/* CENTER */
-
-.center{
+.overlay{
     position:absolute;
     inset:0;
     display:flex;
-    justify-content:center;
     align-items:center;
-    flex-direction:column;
-    background:rgba(0,0,0,.7);
-    backdrop-filter:blur(3px);
-    pointer-events:auto;
+    justify-content:center;
+    background:rgba(3,6,14,.72);
+    backdrop-filter:blur(7px);
+    z-index:10;
 }
 
-.center h1{
-    font-size:65px;
-    letter-spacing:12px;
-    color:#c8c1b4;
-    text-shadow:
-        0 0 10px #000,
-        0 4px 20px #000;
+.card{
+    width:min(440px,90%);
+    padding:38px;
+    text-align:center;
+    border-radius:20px;
+    background:linear-gradient(145deg,#111827,#090d17);
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 20px 60px #000;
 }
 
-.center p{
-    margin:15px 0 25px;
-    color:#aaa;
+.card h1{
+    font-family:Orbitron;
+    font-size:2.3rem;
+    color:#e10600;
+    text-shadow:0 0 20px #e10600;
+    margin-bottom:10px;
 }
 
-button{
-    font-family:'Cinzel',serif;
-    color:#ddd;
-    background:#151515;
-    border:1px solid #777;
-    padding:13px 35px;
-    cursor:pointer;
-    letter-spacing:2px;
-    transition:.2s;
+.card p{
+    color:#94a3b8;
+    margin-bottom:24px;
 }
 
-button:hover{
-    background:#332d24;
-    border-color:#c5a66b;
+.btn{
+    border:0;
+    padding:13px 28px;
+    border-radius:10px;
+    background:linear-gradient(135deg,#e10600,#ff3b30);
     color:#fff;
+    font-family:Prompt;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 8px 25px rgba(225,6,0,.35);
+}
+
+.btn:hover{
+    transform:translateY(-2px);
 }
 
 /* CONTROLS */
 
 .controls{
-    position:absolute;
-    bottom:20px;
-    right:25px;
-    color:#777;
-    font-size:11px;
-    line-height:1.8;
-    text-align:right;
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    padding-top:12px;
 }
 
-.key{
-    color:#bbb;
-    border:1px solid #555;
-    padding:2px 5px;
-    margin:0 2px;
+.control{
+    width:65px;
+    height:48px;
+    border-radius:10px;
+    border:1px solid #334155;
+    background:#111827;
+    color:white;
+    font-size:1.2rem;
 }
 
-/* VIGNETTE */
-
-.vignette{
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-    background:
-        radial-gradient(
-            circle,
-            transparent 45%,
-            rgba(0,0,0,.5) 100%
-        );
+.control:active{
+    background:#e10600;
 }
 
-/* DAMAGE FLASH */
+@media(max-width:600px){
 
-#damage{
-    position:absolute;
-    inset:0;
-    background:rgba(255,0,0,.25);
-    opacity:0;
-    pointer-events:none;
-}
-
-/* MOBILE */
-
-@media(max-width:700px){
-
-    .hud{
-        width:230px;
-        left:12px;
-        top:12px;
+    .game{
+        padding:7px;
     }
 
-    .souls{
-        right:12px;
-        top:15px;
-        font-size:14px;
+    .header{
+        padding:5px;
     }
 
-    .center h1{
-        font-size:35px;
-        letter-spacing:6px;
+    .stats{
+        gap:4px;
+    }
+
+    .stat{
+        min-width:62px;
+        padding:5px;
+    }
+
+    .stat strong{
+        font-size:.75rem;
+    }
+
+    .stat small{
+        font-size:.48rem;
     }
 
     .controls{
-        display:none;
+        padding-top:7px;
     }
 
+    .control{
+        width:58px;
+        height:45px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="game"></canvas>
+<div class="game">
 
-<div id="ui">
+    <div class="header">
 
-    <div class="hud">
-
-        <div class="player-name">
-            ASHEN WARRIOR
+        <div class="logo">
+            F1 <span>NIGHT RACE</span>
         </div>
 
-        <div class="bar">
-            <span class="hud-label">HP</span>
-            <div id="hp" class="bar-inner hp"></div>
-        </div>
+        <div class="stats">
 
-        <div class="bar">
-            <span class="hud-label">STAMINA</span>
-            <div id="stamina" class="bar-inner stamina"></div>
+            <div class="stat">
+                <small>SPEED</small>
+                <strong id="speed">0</strong>
+            </div>
+
+            <div class="stat">
+                <small>LAP</small>
+                <strong id="lap">1 / 3</strong>
+            </div>
+
+            <div class="stat">
+                <small>POSITION</small>
+                <strong id="position">1st</strong>
+            </div>
+
         </div>
 
     </div>
 
-    <div class="souls">
-        ☠ <span id="souls">0</span>
-    </div>
+    <div class="track-wrap">
 
-    <div class="boss-ui" id="bossUI">
+        <canvas id="game"></canvas>
 
-        <div class="boss-name">
-            THE FALLEN KNIGHT
-        </div>
+        <div class="overlay" id="overlay">
 
-        <div class="boss-bar">
-            <div id="bossHP" class="boss-hp"></div>
+            <div class="card">
+
+                <h1 id="title">F1 NIGHT RACE</h1>
+
+                <p id="message">
+                    เตรียมตัวเข้าสู่สนามแข่ง
+                </p>
+
+                <button class="btn" id="start">
+                    🏁 START RACE
+                </button>
+
+            </div>
+
         </div>
 
     </div>
 
     <div class="controls">
-        <span class="key">W A S D</span> Move<br>
-        <span class="key">SPACE</span> Roll<br>
-        <span class="key">J</span> Attack<br>
-        <span class="key">K</span> Heavy Attack<br>
-        <span class="key">E</span> Heal
-    </div>
 
-    <div id="damage"></div>
-
-    <div class="vignette"></div>
-
-    <div class="center" id="menu">
-
-        <h1>DARK SOUL</h1>
-
-        <p>
-            THE FLAME IS FADING...
-        </p>
-
-        <button onclick="startGame()">
-            ENTER THE DARK
-        </button>
+        <button class="control" id="left">◀</button>
+        <button class="control" id="brake">▼</button>
+        <button class="control" id="gas">▲</button>
+        <button class="control" id="right">▶</button>
 
     </div>
 
 </div>
 
-
 <script>
 
-const canvas =
-    document.getElementById("game");
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
 
-const ctx =
-    canvas.getContext("2d");
+const speedEl=document.getElementById("speed");
+const lapEl=document.getElementById("lap");
+const positionEl=document.getElementById("position");
+
+const overlay=document.getElementById("overlay");
+const title=document.getElementById("title");
+const message=document.getElementById("message");
+const startBtn=document.getElementById("start");
 
 let W,H;
 
 function resize(){
 
-    W = canvas.width =
-        window.innerWidth;
-
-    H = canvas.height =
-        window.innerHeight;
-}
-
-window.addEventListener(
-    "resize",
-    resize
-);
-
-resize();
-
-
-/* =========================
-   GAME
-========================= */
-
-let gameStarted = false;
-let gameOver = false;
-let victory = false;
-
-let cameraX = 0;
-
-let souls = 0;
-
-const keys = {};
-
-document.addEventListener(
-    "keydown",
-    e => {
-
-        keys[e.key.toLowerCase()] = true;
-
-        if(
-            e.key === " " ||
-            e.key === "ArrowUp" ||
-            e.key === "ArrowDown" ||
-            e.key === "ArrowLeft" ||
-            e.key === "ArrowRight"
-        ){
-            e.preventDefault();
-        }
-
-        if(
-            e.key.toLowerCase() === "j"
-        ){
-            attack(false);
-        }
-
-        if(
-            e.key.toLowerCase() === "k"
-        ){
-            attack(true);
-        }
-
-        if(
-            e.key.toLowerCase() === "e"
-        ){
-            heal();
-        }
-
-    }
-);
-
-document.addEventListener(
-    "keyup",
-    e => {
-        keys[e.key.toLowerCase()] = false;
-    }
-);
-
-
-/* =========================
-   PLAYER
-========================= */
-
-const player = {
-
-    x:300,
-    y:0,
-
-    w:35,
-    h:65,
-
-    speed:3.5,
-
-    hp:100,
-    maxHp:100,
-
-    stamina:100,
-    maxStamina:100,
-
-    souls:0,
-
-    facing:1,
-
-    attacking:false,
-    attackTimer:0,
-
-    rolling:false,
-    rollTimer:0,
-
-    invincible:0,
-
-    hurtTimer:0
-};
-
-
-/* =========================
-   WORLD
-========================= */
-
-const ground = 560;
-
-const worldWidth = 4200;
-
-
-/* =========================
-   ENEMIES
-========================= */
-
-let enemies = [
-
-    {
-        x:700,
-        y:0,
-        w:42,
-        h:62,
-        hp:45,
-        maxHp:45,
-        speed:1.2,
-        damage:12,
-        type:"hollow",
-        dead:false,
-        attackCooldown:0
-    },
-
-    {
-        x:1150,
-        y:0,
-        w:42,
-        h:62,
-        hp:50,
-        maxHp:50,
-        speed:1.3,
-        damage:14,
-        type:"hollow",
-        dead:false,
-        attackCooldown:0
-    },
-
-    {
-        x:1700,
-        y:0,
-        w:45,
-        h:65,
-        hp:70,
-        maxHp:70,
-        speed:1,
-        damage:17,
-        type:"knight",
-        dead:false,
-        attackCooldown:0
-    },
-
-    {
-        x:2250,
-        y:0,
-        w:45,
-        h:65,
-        hp:80,
-        maxHp:80,
-        speed:.9,
-        damage:19,
-        type:"knight",
-        dead:false,
-        attackCooldown:0
-    }
-
-];
-
-
-/* Boss */
-
-const boss = {
-
-    x:3500,
-    y:0,
-
-    w:90,
-    h:120,
-
-    hp:500,
-    maxHp:500,
-
-    speed:1.3,
-
-    damage:28,
-
-    active:false,
-
-    attackCooldown:0,
-
-    attackTimer:0,
-
-    dead:false
-
-};
-
-
-/* =========================
-   PARTICLES
-========================= */
-
-let particles = [];
-
-function particle(
-    x,
-    y,
-    color,
-    amount=10
-){
-
-    for(
-        let i=0;
-        i<amount;
-        i++
-    ){
-
-        particles.push({
-
-            x:x,
-            y:y,
-
-            vx:
-                (Math.random()-.5)*6,
-
-            vy:
-                (Math.random()-.5)*6,
-
-            life:1,
-
-            size:
-                Math.random()*5+2,
-
-            color
-
-        });
-
-    }
-
-}
-
-
-/* =========================
-   START
-========================= */
-
-function startGame(){
-
-    document.getElementById(
-        "menu"
-    ).style.display = "none";
-
-    gameStarted = true;
-
-    gameOver = false;
-
-    victory = false;
-
-    player.x = 300;
-
-    player.hp = 100;
-
-    player.stamina = 100;
-
-    souls = 0;
-
-    enemies.forEach(e => {
-
-        e.dead = false;
-
-        e.hp = e.maxHp;
-
-    });
-
-    boss.hp = boss.maxHp;
-
-    boss.dead = false;
-
-    document.getElementById(
-        "bossUI"
-    ).style.display = "none";
-
-}
-
-
-/* =========================
-   UPDATE
-========================= */
-
-function update(){
-
-    if(
-        !gameStarted ||
-        gameOver ||
-        victory
-    ) return;
-
-
-    /* Player movement */
-
-    let moving = false;
-
-    if(keys["a"]){
-
-        player.x -= player.speed;
-
-        player.facing = -1;
-
-        moving = true;
-
-    }
-
-    if(keys["d"]){
-
-        player.x += player.speed;
-
-        player.facing = 1;
-
-        moving = true;
-
-    }
-
-
-    /* Roll */
-
-    if(
-        keys[" "] &&
-        !player.rolling &&
-        player.stamina >= 25
-    ){
-
-        player.rolling = true;
-
-        player.rollTimer = 18;
-
-        player.invincible = 25;
-
-        player.stamina -= 25;
-
-    }
-
-
-    if(player.rolling){
-
-        player.x +=
-            player.facing * 7;
-
-        player.rollTimer--;
-
-        if(
-            player.rollTimer <= 0
-        ){
-
-            player.rolling = false;
-
-        }
-
-    }
-
-
-    /* Boundaries */
-
-    player.x =
-        Math.max(
-            50,
-            Math.min(
-                worldWidth-100,
-                player.x
-            )
-        );
-
-
-    /* Stamina regeneration */
-
-    if(
-        !player.rolling &&
-        !player.attacking
-    ){
-
-        player.stamina += .6;
-
-    }
-
-    player.stamina =
-        Math.min(
-            player.maxStamina,
-            player.stamina
-        );
-
-
-    if(player.invincible > 0)
-        player.invincible--;
-
-
-    if(player.attackTimer > 0){
-
-        player.attackTimer--;
-
-        if(
-            player.attackTimer === 0
-        ){
-
-            player.attacking = false;
-
-        }
-
-    }
-
-
-    /* Enemies */
-
-    enemies.forEach(enemy => {
-
-        if(enemy.dead) return;
-
-        enemy.attackCooldown--;
-
-        const dx =
-            player.x - enemy.x;
-
-        const distance =
-            Math.abs(dx);
-
-        if(distance < 450){
-
-            if(distance > 65){
-
-                enemy.x +=
-                    Math.sign(dx) *
-                    enemy.speed;
-
-            }
-
-            else if(
-                enemy.attackCooldown <= 0
-            ){
-
-                damagePlayer(
-                    enemy.damage
-                );
-
-                enemy.attackCooldown =
-                    90;
-
-            }
-
-        }
-
-    });
-
-
-    /* Boss */
-
-    if(
-        player.x > 3000 &&
-        !boss.dead
-    ){
-
-        boss.active = true;
-
-        document.getElementById(
-            "bossUI"
-        ).style.display = "block";
-
-    }
-
-
-    if(
-        boss.active &&
-        !boss.dead
-    ){
-
-        updateBoss();
-
-    }
-
-
-    /* Camera */
-
-    cameraX =
-        player.x -
-        W*.35;
-
-    cameraX =
-        Math.max(
-            0,
-            Math.min(
-                worldWidth-W,
-                cameraX
-            )
-        );
-
-
-    /* Particles */
-
-    particles.forEach(p => {
-
-        p.x += p.vx;
-        p.y += p.vy;
-
-        p.vy += .15;
-
-        p.life -= .025;
-
-    });
-
-    particles =
-        particles.filter(
-            p => p.life > 0
-        );
-
-
-    /* Victory */
-
-    if(
-        boss.dead &&
-        player.x > 3900
-    ){
-
-        victory = true;
-
-        showEnd(
-            "VICTORY",
-            "THE FLAME SURVIVES"
-        );
-
-    }
-
-}
-
-
-/* =========================
-   BOSS
-========================= */
-
-function updateBoss(){
-
-    const dx =
-        player.x - boss.x;
-
-    const distance =
-        Math.abs(dx);
-
-    boss.attackCooldown--;
-
-    if(distance > 100){
-
-        boss.x +=
-            Math.sign(dx) *
-            boss.speed;
-
-    }
-
-    else if(
-        boss.attackCooldown <= 0
-    ){
-
-        damagePlayer(
-            boss.damage
-        );
-
-        boss.attackCooldown =
-            100;
-
-        particle(
-            boss.x,
-            ground-boss.h/2,
-            "#ff3b3b",
-            15
-        );
-
-    }
-
-}
-
-
-/* =========================
-   ATTACK
-========================= */
-
-function attack(heavy){
-
-    if(
-        !gameStarted ||
-        gameOver ||
-        victory ||
-        player.attacking ||
-        player.rolling
-    ) return;
-
-
-    const cost =
-        heavy ? 35 : 15;
-
-    if(
-        player.stamina < cost
-    ) return;
-
-    player.stamina -= cost;
-
-    player.attacking = true;
-
-    player.attackTimer =
-        heavy ? 28 : 18;
-
-    const range =
-        heavy ? 130 : 105;
-
-    const damage =
-        heavy ? 35 : 20;
-
-
-    particle(
-        player.x +
-        player.facing*70,
-        ground-65,
-        "#e8d59b",
-        heavy ? 15 : 7
-    );
-
-
-    /* Enemy hit */
-
-    enemies.forEach(enemy => {
-
-        if(enemy.dead) return;
-
-        const dx =
-            enemy.x - player.x;
-
-        if(
-            Math.abs(dx) < range &&
-            Math.sign(dx) === player.facing
-        ){
-
-            enemy.hp -= damage;
-
-            particle(
-                enemy.x,
-                ground-45,
-                "#bd1d1d",
-                15
-            );
-
-            if(
-                enemy.hp <= 0
-            ){
-
-                enemy.dead = true;
-
-                souls +=
-                    enemy.type === "knight"
-                    ? 100
-                    : 50;
-
-                particle(
-                    enemy.x,
-                    ground-40,
-                    "#d8c28c",
-                    25
-                );
-
-            }
-
-        }
-
-    });
-
-
-    /* Boss hit */
-
-    if(
-        boss.active &&
-        !boss.dead
-    ){
-
-        const dx =
-            boss.x-player.x;
-
-        if(
-            Math.abs(dx) < range &&
-            Math.sign(dx) === player.facing
-        ){
-
-            boss.hp -= damage;
-
-            particle(
-                boss.x,
-                ground-70,
-                "#ff3d3d",
-                18
-            );
-
-            if(
-                boss.hp <= 0
-            ){
-
-                boss.dead = true;
-
-                boss.active = false;
-
-                souls += 1000;
-
-                document.getElementById(
-                    "bossUI"
-                ).style.display = "none";
-
-                particle(
-                    boss.x,
-                    ground-70,
-                    "#e5c46b",
-                    80
-                );
-
-            }
-
-        }
-
-    }
-
-}
-
-
-/* =========================
-   DAMAGE
-========================= */
-
-function damagePlayer(amount){
-
-    if(
-        player.invincible > 0 ||
-        player.rolling ||
-        player.hurtTimer > 0
-    ) return;
-
-    player.hp -= amount;
-
-    player.hurtTimer = 30;
-
-    document.getElementById(
-        "damage"
-    ).style.opacity = "1";
-
-    setTimeout(() => {
-
-        document.getElementById(
-            "damage"
-        ).style.opacity = "0";
-
-    },100);
-
-    particle(
-        player.x,
-        ground-40,
-        "#d11",
-        15
-    );
-
-
-    if(
-        player.hp <= 0
-    ){
-
-        player.hp = 0;
-
-        gameOver = true;
-
-        showEnd(
-            "YOU DIED",
-            "THE FLAME HAS FADING..."
-        );
-
-    }
-
-}
-
-
-/* =========================
-   HEAL
-========================= */
-
-function heal(){
-
-    if(
-        !gameStarted ||
-        player.hp >= player.maxHp ||
-        player.stamina < 10
-    ) return;
-
-    player.hp += 35;
-
-    player.hp =
-        Math.min(
-            player.maxHp,
-            player.hp
-        );
-
-    player.stamina -= 10;
-
-    particle(
-        player.x,
-        ground-60,
-        "#ffe477",
-        25
-    );
-
-}
-
-
-/* =========================
-   DRAW
-========================= */
-
-function draw(){
-
-    ctx.clearRect(
+    W=canvas.width=canvas.clientWidth*devicePixelRatio;
+    H=canvas.height=canvas.clientHeight*devicePixelRatio;
+
+    ctx.setTransform(
+        devicePixelRatio,
         0,
         0,
-        W,
-        H
-    );
-
-
-    /* Sky */
-
-    const sky =
-        ctx.createLinearGradient(
-            0,
-            0,
-            0,
-            H
-        );
-
-    sky.addColorStop(
+        devicePixelRatio,
         0,
-        "#070a12"
-    );
-
-    sky.addColorStop(
-        .55,
-        "#12151a"
-    );
-
-    sky.addColorStop(
-        1,
-        "#050505"
-    );
-
-    ctx.fillStyle = sky;
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    ctx.save();
-
-    ctx.translate(
-        -cameraX,
         0
     );
 
+    W=canvas.clientWidth;
+    H=canvas.clientHeight;
+}
 
-    drawMoon();
+window.addEventListener("resize",resize);
+resize();
 
-    drawMountains();
 
-    drawGround();
+/* ================= GAME ================= */
 
-    drawRuins();
+let running=false;
 
-    enemies.forEach(
-        drawEnemy
+let car={
+    x:0,
+    y:0,
+    angle:0,
+    speed:0,
+    nitro:100
+};
+
+let opponents=[];
+
+let keys={};
+
+let roadOffset=0;
+let distance=0;
+
+const totalLaps=3;
+let lap=1;
+
+let lastTime=0;
+
+
+/* ================= INPUT ================= */
+
+document.addEventListener("keydown",e=>{
+    keys[e.key.toLowerCase()]=true;
+
+    if([
+        "arrowup",
+        "arrowdown",
+        "arrowleft",
+        "arrowright",
+        " "
+    ].includes(e.key.toLowerCase()))
+        e.preventDefault();
+});
+
+document.addEventListener("keyup",e=>{
+    keys[e.key.toLowerCase()]=false;
+});
+
+
+function hold(button,key){
+
+    const el=document.getElementById(button);
+
+    el.addEventListener("touchstart",e=>{
+        e.preventDefault();
+        keys[key]=true;
+    });
+
+    el.addEventListener("touchend",e=>{
+        e.preventDefault();
+        keys[key]=false;
+    });
+
+    el.addEventListener("mousedown",()=>{
+        keys[key]=true;
+    });
+
+    el.addEventListener("mouseup",()=>{
+        keys[key]=false;
+    });
+
+    el.addEventListener("mouseleave",()=>{
+        keys[key]=false;
+    });
+}
+
+hold("left","arrowleft");
+hold("right","arrowright");
+hold("gas","arrowup");
+hold("brake","arrowdown");
+
+
+/* ================= START ================= */
+
+startBtn.onclick=()=>{
+    startRace();
+};
+
+function startRace(){
+
+    running=true;
+
+    overlay.style.display="none";
+
+    car={
+        x:W/2,
+        y:H*.78,
+        angle:0,
+        speed:0,
+        nitro:100
+    };
+
+    distance=0;
+    lap=1;
+
+    createOpponents();
+
+    lastTime=performance.now();
+
+    requestAnimationFrame(loop);
+}
+
+
+/* ================= OPPONENTS ================= */
+
+function createOpponents(){
+
+    opponents=[];
+
+    const colors=[
+        "#00d9ff",
+        "#ffcc00",
+        "#7c3aed",
+        "#22c55e",
+        "#f97316"
+    ];
+
+    for(let i=0;i<5;i++){
+
+        opponents.push({
+            x:W/2+(i-2)*45,
+            y:H*.5-i*100,
+            speed:2.5+Math.random()*1.8,
+            color:colors[i],
+            distance:Math.random()*500
+        });
+    }
+}
+
+
+/* ================= LOOP ================= */
+
+function loop(time){
+
+    if(!running)return;
+
+    const dt=Math.min(
+        (time-lastTime)/16.67,
+        2
     );
 
-    if(
-        boss.active &&
-        !boss.dead
-    ){
+    lastTime=time;
 
-        drawBoss();
+    update(dt);
+    draw();
+
+    requestAnimationFrame(loop);
+}
+
+
+/* ================= UPDATE ================= */
+
+function update(dt){
+
+    const gas=
+        keys["arrowup"] ||
+        keys["w"];
+
+    const brake=
+        keys["arrowdown"] ||
+        keys["s"];
+
+    const left=
+        keys["arrowleft"] ||
+        keys["a"];
+
+    const right=
+        keys["arrowright"] ||
+        keys["d"];
+
+    if(gas)
+        car.speed+=.12*dt;
+    else
+        car.speed-=.035*dt;
+
+    if(brake)
+        car.speed-=.18*dt;
+
+    car.speed=Math.max(
+        0,
+        Math.min(8,car.speed)
+    );
+
+
+    /* Nitro */
+
+    if(keys[" "] && car.nitro>0){
+
+        car.speed+=.12*dt;
+        car.nitro-=.5*dt;
+
+    }else{
+
+        car.nitro+=.12*dt;
 
     }
 
-
-    drawPlayer();
-
-    drawParticles();
-
-    ctx.restore();
+    car.nitro=Math.max(
+        0,
+        Math.min(100,car.nitro)
+    );
 
 
-    updateHUD();
+    /* Steering */
+
+    if(left)
+        car.x-=3.2*dt*(.5+car.speed/8);
+
+    if(right)
+        car.x+=3.2*dt*(.5+car.speed/8);
+
+
+    /* Track boundaries */
+
+    const trackLeft=W*.25;
+    const trackRight=W*.75;
+
+    car.x=Math.max(
+        trackLeft+25,
+        Math.min(
+            trackRight-25,
+            car.x
+        )
+    );
+
+
+    roadOffset+=car.speed*dt;
+
+    distance+=car.speed*dt;
+
+    if(distance>1200){
+
+        distance=0;
+        lap++;
+
+        if(lap>totalLaps){
+
+            finishRace();
+            return;
+        }
+    }
+
+
+    /* AI */
+
+    opponents.forEach(o=>{
+
+        o.y+=(
+            car.speed-o.speed
+        )*dt;
+
+        o.y+=
+            car.speed*.7*dt;
+
+        if(o.y>H+100){
+
+            o.y=-100;
+            o.x=
+                W*.35+
+                Math.random()*
+                W*.3;
+
+        }
+
+    });
+
+
+    /* Collision */
+
+    opponents.forEach(o=>{
+
+        if(
+            Math.abs(car.x-o.x)<28 &&
+            Math.abs(car.y-o.y)<50
+        ){
+
+            car.speed*=.55;
+
+        }
+
+    });
+
+
+    /* Position */
+
+    let position=1;
+
+    opponents.forEach(o=>{
+        if(o.y>car.y)
+            position++;
+    });
+
+    positionEl.textContent=
+        position+
+        (position===1?"st":
+         position===2?"nd":
+         position===3?"rd":"th");
+
+    speedEl.textContent=
+        Math.round(car.speed*38);
+
+    lapEl.textContent=
+        `${lap} / ${totalLaps}`;
+}
+
+
+/* ================= DRAW ================= */
+
+function draw(){
+
+    ctx.clearRect(0,0,W,H);
+
+    drawSky();
+    drawTrack();
+    drawCars();
+    drawHUD();
 
 }
 
 
-/* =========================
-   MOON
-========================= */
+/* SKY */
 
-function drawMoon(){
+function drawSky(){
 
-    const x =
-        320;
-
-    const y =
-        110;
-
-    const gradient =
-        ctx.createRadialGradient(
-            x,y,5,
-            x,y,100
+    const gradient=
+        ctx.createLinearGradient(
+            0,0,0,H
         );
 
     gradient.addColorStop(
         0,
-        "rgba(220,220,200,.3)"
+        "#020617"
+    );
+
+    gradient.addColorStop(
+        .45,
+        "#111827"
     );
 
     gradient.addColorStop(
         1,
-        "rgba(220,220,200,0)"
+        "#020617"
     );
 
-    ctx.fillStyle = gradient;
+    ctx.fillStyle=gradient;
 
     ctx.fillRect(
-        x-100,
-        y-100,
-        200,
-        200
+        0,0,W,H
     );
 
-    ctx.fillStyle =
-        "#c9c8b9";
+
+    /* Moon */
+
+    ctx.beginPath();
+
+    ctx.arc(
+        W*.82,
+        H*.15,
+        45,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle="#e2e8f0";
+    ctx.shadowColor="#fff";
+    ctx.shadowBlur=30;
+
+    ctx.fill();
+
+    ctx.shadowBlur=0;
+
+
+    /* Stars */
+
+    for(let i=0;i<80;i++){
+
+        const x=(i*83)%W;
+        const y=(i*47)%(H*.45);
+
+        ctx.fillStyle=
+            "rgba(255,255,255,.5)";
+
+        ctx.fillRect(
+            x,y,1,1
+        );
+    }
+
+}
+
+
+/* TRACK */
+
+function drawTrack(){
+
+    const center=W/2;
+
+    const left=W*.25;
+    const right=W*.75;
+
+    /* Grass */
+
+    ctx.fillStyle="#17251b";
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    /* Road */
+
+    ctx.fillStyle="#252a32";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        center-W*.25,
+        0
+    );
+
+    ctx.lineTo(
+        center+W*.25,
+        0
+    );
+
+    ctx.lineTo(
+        center+W*.25,
+        H
+    );
+
+    ctx.lineTo(
+        center-W*.25,
+        H
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /* Road edges */
+
+    ctx.fillStyle="#e10600";
+
+    ctx.fillRect(
+        left-8,
+        0,
+        8,
+        H
+    );
+
+    ctx.fillRect(
+        right,
+        0,
+        8,
+        H
+    );
+
+
+    /* Kerbs */
+
+    for(
+        let y=-60+(roadOffset%60);
+        y<H;
+        y+=60
+    ){
+
+        ctx.fillStyle=
+            ((Math.floor(y/60)%2)===0)
+            ? "#fff"
+            : "#e10600";
+
+        ctx.fillRect(
+            left-22,
+            y,
+            14,
+            30
+        );
+
+        ctx.fillRect(
+            right+8,
+            y,
+            14,
+            30
+        );
+    }
+
+
+    /* Center lines */
+
+    ctx.setLineDash([
+        45,
+        35
+    ]);
+
+    ctx.lineDashOffset=
+        -roadOffset*2;
+
+    ctx.strokeStyle=
+        "rgba(255,255,255,.15)";
+
+    ctx.lineWidth=3;
+
+    ctx.beginPath();
+
+    ctx.moveTo(center,0);
+    ctx.lineTo(center,H);
+
+    ctx.stroke();
+
+    ctx.setLineDash([]);
+
+
+    /* Start finish */
+
+    const finishY=
+        ((H*.2+roadOffset*2)%H);
+
+    for(let x=left;x<right;x+=40){
+
+        const even=
+            Math.floor(x/40)%2===0;
+
+        ctx.fillStyle=
+            even?"#fff":"#111";
+
+        ctx.fillRect(
+            x,
+            finishY,
+            40,
+            20
+        );
+    }
+
+}
+
+
+/* ================= CARS ================= */
+
+function drawCars(){
+
+    opponents.forEach(o=>{
+        drawCar(
+            o.x,
+            o.y,
+            o.color,
+            false
+        );
+    });
+
+
+    drawCar(
+        car.x,
+        car.y,
+        "#e10600",
+        true
+    );
+
+}
+
+
+/* CAR */
+
+function drawCar(
+    x,
+    y,
+    color,
+    player
+){
+
+    ctx.save();
+
+    ctx.translate(x,y);
+
+    /* Shadow */
+
+    ctx.fillStyle="rgba(0,0,0,.5)";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        0,
+        8,
+        24,
+        42,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /* Glow */
+
+    if(player){
+
+        ctx.shadowColor=color;
+        ctx.shadowBlur=20;
+    }
+
+
+    /* Body */
+
+    ctx.fillStyle=color;
+
+    roundRect(
+        ctx,
+        -15,
+        -36,
+        30,
+        72,
+        8
+    );
+
+    ctx.fill();
+
+
+    /* Nose */
+
+    ctx.fillStyle=color;
+
+    ctx.beginPath();
+
+    ctx.moveTo(-9,-36);
+    ctx.lineTo(9,-36);
+    ctx.lineTo(5,-49);
+    ctx.lineTo(-5,-49);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /* Cockpit */
+
+    ctx.fillStyle="#020617";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        0,
+        -7,
+        8,
+        13,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /* Driver */
+
+    ctx.fillStyle="#111827";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        -10,
+        5,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /* Front wing */
+
+    ctx.fillStyle="#111827";
+
+    ctx.fillRect(
+        -22,
+        -47,
+        44,
+        5
+    );
+
+
+    /* Rear wing */
+
+    ctx.fillRect(
+        -19,
+        34,
+        38,
+        5
+    );
+
+
+    /* Wheels */
+
+    ctx.fillStyle="#050505";
+
+    ctx.fillRect(
+        -20,
+        -25,
+        7,
+        18
+    );
+
+    ctx.fillRect(
+        13,
+        -25,
+        7,
+        18
+    );
+
+    ctx.fillRect(
+        -20,
+        15,
+        7,
+        18
+    );
+
+    ctx.fillRect(
+        13,
+        15,
+        7,
+        18
+    );
+
+
+    /* Lights */
+
+    ctx.fillStyle=
+        player?"#fff":"#ff3333";
+
+    ctx.shadowColor=
+        player?"#fff":"#ff0000";
+
+    ctx.shadowBlur=8;
+
+    ctx.fillRect(
+        -4,
+        -49,
+        8,
+        3
+    );
+
+    ctx.restore();
+
+}
+
+
+/* HUD */
+
+function drawHUD(){
+
+    /* Speed gauge */
+
+    const x=65;
+    const y=H-65;
 
     ctx.beginPath();
 
     ctx.arc(
         x,
         y,
-        40,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-}
-
-
-/* =========================
-   MOUNTAINS
-========================= */
-
-function drawMountains(){
-
-    ctx.fillStyle =
-        "#0c1015";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        cameraX,
-        ground
-    );
-
-    for(
-        let x=0;
-        x<worldWidth;
-        x+=250
-    ){
-
-        ctx.lineTo(
-            x,
-            ground -
-            100 -
-            Math.random()*120
-        );
-
-    }
-
-    ctx.lineTo(
-        worldWidth,
-        ground
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-}
-
-
-/* =========================
-   GROUND
-========================= */
-
-function drawGround(){
-
-    ctx.fillStyle =
-        "#11110f";
-
-    ctx.fillRect(
-        0,
-        ground,
-        worldWidth,
-        H-ground
-    );
-
-
-    ctx.strokeStyle =
-        "#35332d";
-
-    ctx.lineWidth = 2;
-
-    for(
-        let x=0;
-        x<worldWidth;
-        x+=100
-    ){
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            x,
-            ground
-        );
-
-        ctx.lineTo(
-            x+40,
-            H
-        );
-
-        ctx.stroke();
-
-    }
-
-}
-
-
-/* =========================
-   RUINS
-========================= */
-
-function drawRuins(){
-
-    for(
-        let x=150;
-        x<worldWidth;
-        x+=380
-    ){
-
-        ctx.fillStyle =
-            "#161819";
-
-        ctx.fillRect(
-            x,
-            ground-150,
-            70,
-            150
-        );
-
-        ctx.fillRect(
-            x+90,
-            ground-90,
-            45,
-            90
-        );
-
-
-        ctx.fillStyle =
-            "#242628";
-
-        ctx.fillRect(
-            x-10,
-            ground-155,
-            90,
-            12
-        );
-
-    }
-
-}
-
-
-/* =========================
-   PLAYER
-========================= */
-
-function drawPlayer(){
-
-    const x =
-        player.x;
-
-    const y =
-        ground-player.h;
-
-
-    /* Shadow */
-
-    ctx.fillStyle =
-        "rgba(0,0,0,.6)";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x,
-        ground+4,
-        30,
-        8,
-        0,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    if(player.rolling){
-
-        ctx.fillStyle =
-            "#24262a";
-
-        ctx.beginPath();
-
-        ctx.arc(
-            x,
-            y+30,
-            25,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-        return;
-
-    }
-
-
-    /* Cape */
-
-    ctx.fillStyle =
-        "#16181c";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x-20,
-        y+22
-    );
-
-    ctx.lineTo(
-        x-34,
-        y+65
-    );
-
-    ctx.lineTo(
-        x+15,
-        y+65
-    );
-
-    ctx.lineTo(
-        x+18,
-        y+20
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    /* Body armor */
-
-    ctx.fillStyle =
-        "#34373b";
-
-    ctx.fillRect(
-        x-17,
-        y+25,
-        34,
-        40
-    );
-
-
-    /* Head */
-
-    ctx.fillStyle =
-        "#45494d";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y+17,
-        16,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    /* Helmet */
-
-    ctx.fillStyle =
-        "#24272a";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y+14,
-        17,
+        38,
         Math.PI,
         Math.PI*2
     );
 
-    ctx.fill();
+    ctx.strokeStyle=
+        "rgba(255,255,255,.15)";
+
+    ctx.lineWidth=6;
+
+    ctx.stroke();
 
 
-    /* Visor */
-
-    ctx.fillStyle =
-        "#080808";
-
-    ctx.fillRect(
-        x-13,
-        y+13,
-        26,
-        6
-    );
-
-
-    /* Sword */
-
-    ctx.save();
-
-    ctx.translate(
-        x,
-        y+40
-    );
-
-    ctx.rotate(
-        player.facing *
-        -.35
-    );
-
-    ctx.fillStyle =
-        "#b8b7ad";
-
-    ctx.fillRect(
-        15,
-        -4,
-        62,
-        5
-    );
-
-    ctx.fillStyle =
-        "#6b5634";
-
-    ctx.fillRect(
-        7,
-        -8,
-        10,
-        14
-    );
-
-    ctx.restore();
-
-
-    /* Attack slash */
-
-    if(player.attacking){
-
-        ctx.strokeStyle =
-            "rgba(230,220,190,.9)";
-
-        ctx.lineWidth = 5;
-
-        ctx.shadowColor =
-            "#fff";
-
-        ctx.shadowBlur = 15;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            x,
-            y+35,
-            75,
-            player.facing === 1
-                ? -.8
-                : Math.PI+.8,
-
-            player.facing === 1
-                ? .8
-                : Math.PI-.8
-        );
-
-        ctx.stroke();
-
-        ctx.shadowBlur = 0;
-
-    }
-
-}
-
-
-/* =========================
-   ENEMY
-========================= */
-
-function drawEnemy(enemy){
-
-    if(enemy.dead) return;
-
-    const x =
-        enemy.x;
-
-    const y =
-        ground-enemy.h;
-
-
-    /* Shadow */
-
-    ctx.fillStyle =
-        "rgba(0,0,0,.7)";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x,
-        ground+3,
-        27,
-        7,
-        0,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    /* Cloak */
-
-    ctx.fillStyle =
-        enemy.type === "knight"
-        ? "#27282b"
-        : "#1d1d1d";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x-20,
-        y+20
-    );
-
-    ctx.lineTo(
-        x-30,
-        ground
-    );
-
-    ctx.lineTo(
-        x+28,
-        ground
-    );
-
-    ctx.lineTo(
-        x+18,
-        y+20
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    /* Head */
-
-    ctx.fillStyle =
-        "#393a3c";
+    const amount=
+        car.speed/8;
 
     ctx.beginPath();
 
     ctx.arc(
         x,
-        y+18,
-        15,
-        0,
-        Math.PI*2
+        y,
+        38,
+        Math.PI,
+        Math.PI+Math.PI*amount
     );
 
-    ctx.fill();
+    ctx.strokeStyle="#e10600";
+    ctx.lineWidth=6;
+
+    ctx.stroke();
 
 
-    /* Eyes */
+    ctx.fillStyle="#fff";
 
-    ctx.fillStyle =
-        "#d32b2b";
+    ctx.font="bold 13px Orbitron";
 
-    ctx.shadowColor =
-        "#f00";
+    ctx.textAlign="center";
 
-    ctx.shadowBlur = 10;
-
-    ctx.fillRect(
-        x-9,
-        y+15,
-        5,
-        3
-    );
-
-    ctx.fillRect(
-        x+4,
-        y+15,
-        5,
-        3
-    );
-
-    ctx.shadowBlur = 0;
-
-
-    /* Weapon */
-
-    ctx.fillStyle =
-        "#8b8b82";
-
-    ctx.fillRect(
-        x+10,
-        y+30,
-        45,
-        4
-    );
-
-
-    /* HP */
-
-    ctx.fillStyle =
-        "#080808";
-
-    ctx.fillRect(
-        x-25,
-        y-12,
-        50,
-        5
-    );
-
-    ctx.fillStyle =
-        "#9d2020";
-
-    ctx.fillRect(
-        x-25,
-        y-12,
-        50 *
-        (enemy.hp/enemy.maxHp),
-        5
-    );
-
-}
-
-
-/* =========================
-   BOSS
-========================= */
-
-function drawBoss(){
-
-    const x =
-        boss.x;
-
-    const y =
-        ground-boss.h;
-
-
-    /* Aura */
-
-    const aura =
-        ctx.createRadialGradient(
-            x,
-            y+60,
-            10,
-            x,
-            y+60,
-            140
-        );
-
-    aura.addColorStop(
-        0,
-        "rgba(130,0,0,.25)"
-    );
-
-    aura.addColorStop(
-        1,
-        "rgba(130,0,0,0)"
-    );
-
-    ctx.fillStyle = aura;
-
-    ctx.fillRect(
-        x-150,
-        y-50,
-        300,
-        250
-    );
-
-
-    /* Body */
-
-    ctx.fillStyle =
-        "#202124";
-
-    ctx.fillRect(
-        x-38,
-        y+30,
-        76,
-        90
-    );
-
-
-    /* Cape */
-
-    ctx.fillStyle =
-        "#090909";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x-40,
-        y+40
-    );
-
-    ctx.lineTo(
-        x-80,
-        ground
-    );
-
-    ctx.lineTo(
-        x+75,
-        ground
-    );
-
-    ctx.lineTo(
-        x+38,
-        y+40
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    /* Helmet */
-
-    ctx.fillStyle =
-        "#383a3d";
-
-    ctx.beginPath();
-
-    ctx.arc(
+    ctx.fillText(
+        "KM/H",
         x,
-        y+25,
-        31,
-        0,
-        Math.PI*2
+        y+20
     );
 
-    ctx.fill();
 
+    /* Nitro */
 
-    /* Horns */
+    const barW=150;
+    const barH=8;
 
-    ctx.fillStyle =
-        "#1a1a1a";
+    const bx=W-barW-25;
+    const by=H-35;
 
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x-22,
-        y+5
-    );
-
-    ctx.lineTo(
-        x-50,
-        y-35
-    );
-
-    ctx.lineTo(
-        x-30,
-        y+15
-    );
-
-    ctx.fill();
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+22,
-        y+5
-    );
-
-    ctx.lineTo(
-        x+50,
-        y-35
-    );
-
-    ctx.lineTo(
-        x+30,
-        y+15
-    );
-
-    ctx.fill();
-
-
-    /* Eyes */
-
-    ctx.fillStyle =
-        "#e32b2b";
-
-    ctx.shadowColor =
-        "#ff0000";
-
-    ctx.shadowBlur = 18;
+    ctx.fillStyle=
+        "rgba(255,255,255,.12)";
 
     ctx.fillRect(
-        x-18,
-        y+20,
-        10,
-        5
+        bx,
+        by,
+        barW,
+        barH
     );
+
+    ctx.fillStyle="#00d9ff";
 
     ctx.fillRect(
-        x+8,
-        y+20,
-        10,
-        5
+        bx,
+        by,
+        barW*(car.nitro/100),
+        barH
     );
 
-    ctx.shadowBlur = 0;
+    ctx.font="10px Prompt";
+    ctx.textAlign="right";
+    ctx.fillStyle="#94a3b8";
 
-
-    /* Great sword */
-
-    ctx.save();
-
-    ctx.translate(
-        x,
-        y+65
+    ctx.fillText(
+        "NITRO [SPACE]",
+        bx+barW,
+        by-7
     );
-
-    ctx.rotate(.25);
-
-    ctx.fillStyle =
-        "#aaa89f";
-
-    ctx.fillRect(
-        0,
-        -6,
-        115,
-        12
-    );
-
-    ctx.fillStyle =
-        "#6d4e2e";
-
-    ctx.fillRect(
-        -10,
-        -11,
-        25,
-        22
-    );
-
-    ctx.restore();
 
 }
 
 
-/* =========================
-   PARTICLES
-========================= */
+/* ROUND RECT */
 
-function drawParticles(){
-
-    particles.forEach(p => {
-
-        ctx.globalAlpha =
-            p.life;
-
-        ctx.fillStyle =
-            p.color;
-
-        ctx.shadowColor =
-            p.color;
-
-        ctx.shadowBlur = 10;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            p.x,
-            p.y,
-            p.size,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-    });
-
-    ctx.globalAlpha = 1;
-
-    ctx.shadowBlur = 0;
-
-}
-
-
-/* =========================
-   HUD
-========================= */
-
-function updateHUD(){
-
-    document.getElementById(
-        "hp"
-    ).style.width =
-        player.hp + "%";
-
-    document.getElementById(
-        "stamina"
-    ).style.width =
-        player.stamina + "%";
-
-    document.getElementById(
-        "souls"
-    ).textContent =
-        souls;
-
-    document.getElementById(
-        "bossHP"
-    ).style.width =
-        Math.max(
-            0,
-            boss.hp /
-            boss.maxHp *
-            100
-        ) + "%";
-
-}
-
-
-/* =========================
-   END SCREEN
-========================= */
-
-function showEnd(
-    title,
-    subtitle
+function roundRect(
+    ctx,
+    x,
+    y,
+    w,
+    h,
+    r
 ){
 
-    const menu =
-        document.getElementById(
-            "menu"
-        );
+    ctx.beginPath();
 
-    menu.style.display =
-        "flex";
+    ctx.moveTo(
+        x+r,
+        y
+    );
 
-    menu.innerHTML = `
+    ctx.arcTo(
+        x+w,
+        y,
+        x+w,
+        y+h,
+        r
+    );
 
-        <h1>${title}</h1>
+    ctx.arcTo(
+        x+w,
+        y+h,
+        x,
+        y+h,
+        r
+    );
 
-        <p>${subtitle}</p>
+    ctx.arcTo(
+        x,
+        y+h,
+        x,
+        y,
+        r
+    );
 
-        <p style="
-            color:#d5b27a;
-            margin-bottom:25px;
-        ">
-            SOULS: ${souls}
-        </p>
+    ctx.arcTo(
+        x,
+        y,
+        x+w,
+        y,
+        r
+    );
 
-        <button onclick="startGame()">
-            RETURN
+    ctx.closePath();
+}
+
+
+/* ================= FINISH ================= */
+
+function finishRace(){
+
+    running=false;
+
+    title.textContent="🏆 FINISH";
+
+    message.textContent=
+        "การแข่งขันจบลงแล้ว!";
+
+    startBtn.textContent=
+        "↻ RACE AGAIN";
+
+    overlay.style.display="flex";
+
+}
+
+
+/* Initial screen */
+
+resize();
+
+</script>
+
+</body>
+</html>
