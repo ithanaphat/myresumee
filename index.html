@@ -3,258 +3,628 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ประวัติส่วนตัว | นายธนภัทร จันทร์จอม (Resume)</title>
+
+    <title>ธนภัทร จันทร์จอม | Full-Stack Web Developer</title>
+
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+
         :root {
-            --primary: #1e293b;
-            --secondary: #0f172a;
-            --accent: #2563eb;
-            --bg: #f8fafc;
-            --text: #334155;
-            --text-light: #64748b;
+            --primary: #0f172a;
+            --secondary: #475569;
+            --accent: #6366f1;
+            --accent-light: #eef2ff;
+            --blue: #3b82f6;
+            --bg: #f1f5f9;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --muted: #94a3b8;
         }
-        
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            padding: 2rem 1rem;
+            font-family: 'Prompt', sans-serif;
+            background:
+                radial-gradient(circle at top left, #e0e7ff 0, transparent 30%),
+                radial-gradient(circle at bottom right, #dbeafe 0, transparent 30%),
+                var(--bg);
+            color: var(--primary);
+            line-height: 1.7;
+            padding: 40px 20px;
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 3rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            max-width: 1000px;
+            margin: auto;
+            background: var(--white);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12);
         }
 
-        /* Header Section */
+        /* ================= HEADER ================= */
+
         header {
-            text-align: center;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 2rem;
-            margin-bottom: 2rem;
+            position: relative;
+            padding: 55px 60px 45px;
+            color: white;
+            background:
+                linear-gradient(135deg, #0f172a, #1e293b 55%, #3730a3);
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.25);
+            right: -80px;
+            top: -100px;
+            filter: blur(10px);
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.15);
+            left: -70px;
+            bottom: -100px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 35px;
+        }
+
+        .profile-wrapper {
+            position: relative;
+            flex-shrink: 0;
         }
 
         .profile-img {
-            width: 130px;
-            height: 130px;
+            width: 145px;
+            height: 145px;
             border-radius: 50%;
-            background-color: #cbd5e1;
-            margin-bottom: 1rem;
             object-fit: cover;
+            border: 5px solid rgba(255,255,255,0.9);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        header h1 {
-            color: var(--primary);
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+        .online {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: #22c55e;
+            border: 3px solid white;
+            border-radius: 50%;
+            right: 10px;
+            bottom: 12px;
         }
 
-        header p.subtitle {
-            color: var(--accent);
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
+        .header-text h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            color: #a5b4fc;
+            font-size: 1.15rem;
+            font-weight: 500;
+            margin-bottom: 18px;
         }
 
         .contact-info {
             display: flex;
-            justify-content: center;
-            gap: 1.5rem;
             flex-wrap: wrap;
-            color: var(--text-light);
-            font-size: 0.95rem;
+            gap: 10px;
         }
 
+        .contact-info span,
         .contact-info a {
-            color: var(--text-light);
+            color: #cbd5e1;
             text-decoration: none;
-            transition: color 0.2s;
+            font-size: 0.9rem;
         }
 
         .contact-info a:hover {
-            color: var(--accent);
+            color: white;
         }
 
-        /* Section Layout */
+        /* ================= CONTENT ================= */
+
+        .content {
+            padding: 55px 60px;
+        }
+
         section {
-            margin-bottom: 2.5rem;
+            margin-bottom: 48px;
         }
 
-        section h2 {
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .section-number {
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: var(--accent-light);
+            padding: 5px 9px;
+            border-radius: 7px;
+        }
+
+        .section-title h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .about {
             color: var(--secondary);
-            font-size: 1.5rem;
-            border-left: 4px solid var(--accent);
-            padding-left: 0.75rem;
-            margin-bottom: 1.25rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            font-size: 1rem;
+            max-width: 850px;
         }
 
-        /* Experience & Education Item */
-        .item {
-            margin-bottom: 1.5rem;
+        /* ================= EXPERIENCE ================= */
+
+        .timeline {
+            position: relative;
+            margin-left: 10px;
+            padding-left: 30px;
+            border-left: 2px solid var(--border);
         }
 
-        .item-header {
+        .timeline-item {
+            position: relative;
+            margin-bottom: 35px;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -39px;
+            top: 5px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 4px solid white;
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+
+        .job-header {
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 0.25rem;
+            align-items: flex-start;
+            gap: 20px;
         }
 
-        .item-title {
+        .job-title {
+            font-size: 1.05rem;
             font-weight: 700;
-            color: var(--primary);
         }
 
-        .item-company {
-            font-weight: 600;
+        .company {
             color: var(--accent);
         }
 
-        .item-date {
-            color: var(--text-light);
-            font-size: 0.9rem;
+        .date {
+            color: var(--muted);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            background: #f8fafc;
+            padding: 4px 10px;
+            border-radius: 6px;
         }
 
-        .item ul {
-            padding-left: 1.25rem;
-            margin-top: 0.5rem;
-            color: var(--text);
+        .timeline ul {
+            margin-top: 10px;
+            padding-left: 18px;
+            color: var(--secondary);
         }
 
-        /* Skills Badges */
-        .skills-grid {
+        .timeline li {
+            margin-bottom: 5px;
+        }
+
+        /* ================= SKILLS ================= */
+
+        .skills {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 10px;
         }
 
-        .badge {
-            background-color: #eff6ff;
-            color: var(--accent);
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
+        .skill {
+            padding: 9px 15px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            color: var(--secondary);
             font-size: 0.9rem;
-            font-weight: 500;
+            transition: all 0.25s ease;
         }
 
-        /* Actions / Buttons */
-        .cta-container {
-            text-align: center;
-            margin-top: 3rem;
+        .skill:hover {
+            transform: translateY(-3px);
+            background: var(--accent-light);
+            color: var(--accent);
+            border-color: #c7d2fe;
+            box-shadow: 0 8px 20px rgba(99,102,241,0.12);
+        }
+
+        /* ================= EDUCATION ================= */
+
+        .education-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 22px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: #fafafa;
+        }
+
+        .education-icon {
+            width: 50px;
+            height: 50px;
+            display: grid;
+            place-items: center;
+            background: var(--accent-light);
+            color: var(--accent);
+            border-radius: 12px;
+            font-size: 1.4rem;
+        }
+
+        .education-title {
+            font-weight: 700;
+        }
+
+        .education-school {
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        /* ================= FOOTER ================= */
+
+        .footer {
+            border-top: 1px solid var(--border);
+            padding-top: 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-text {
+            color: var(--muted);
+            font-size: 0.85rem;
         }
 
         .btn {
-            display: inline-block;
-            background-color: var(--accent);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--accent), var(--blue));
             color: white;
-            padding: 0.75rem 2rem;
-            border-radius: 6px;
+            padding: 11px 20px;
+            border-radius: 10px;
             text-decoration: none;
+            font-size: 0.9rem;
             font-weight: 600;
-            transition: background-color 0.2s;
+            box-shadow: 0 8px 20px rgba(99,102,241,0.25);
+            transition: all 0.25s ease;
         }
 
         .btn:hover {
-            background-color: #1d4ed8;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(99,102,241,0.35);
         }
 
-        /* Responsive Layout */
-        @media (max-width: 600px) {
-            .container { padding: 1.5rem; }
-            .item-header { flex-direction: column; }
-            .item-date { margin-top: 0.25rem; }
-            header h1 { font-size: 2rem; }
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 700px) {
+
+            body {
+                padding: 0;
+            }
+
+            .container {
+                border-radius: 0;
+            }
+
+            header {
+                padding: 40px 25px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-text h1 {
+                font-size: 2.1rem;
+            }
+
+            .contact-info {
+                justify-content: center;
+            }
+
+            .content {
+                padding: 40px 25px;
+            }
+
+            .job-header {
+                flex-direction: column;
+                gap: 7px;
+            }
+
+            .date {
+                align-self: flex-start;
+            }
+
+            .footer {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
+
 <body>
 
 <div class="container">
+
+    <!-- HEADER -->
     <header>
-        <!-- สามารถใส่ URL รูปภาพโปรไฟล์ของคุณใน src -->
-        <div style="display:inline-block;"><img src=https://media1.tenor.com/m/tJmHowCFhGwAAAAC/cat-smile-smile-filter.gif" class="profile-img"></div>
-        <h1>ธนภัทร จันทร์จอม</h1>
-        <p class="subtitle">Full-Stack Web Developer</p>
-        <div class="contact-info">
-            <span>📍 กรุงเทพฯ, ประเทศไทย</span>
-            <span>📞 012-345-6789</span>
-            <span>✉️ <a href="mailto:thanaphat@email.com">thanaphat@email.com</a></span>
-            <span>🔗 <a href="https://linkedin.com" target="_blank">LinkedIn</a></span>
+        <div class="header-content">
+
+            <div class="profile-wrapper">
+                <img
+                    src="https://media1.tenor.com/m/tJmHowCFhGwAAAAC/cat-smile-smile-filter.gif"
+                    class="profile-img"
+                    alt="รูปโปรไฟล์ ธนภัทร จันทร์จอม"
+                >
+                <span class="online"></span>
+            </div>
+
+            <div class="header-text">
+                <h1>ธนภัทร จันทร์จอม</h1>
+
+                <p class="subtitle">
+                    Full-Stack Web Developer
+                </p>
+
+                <div class="contact-info">
+                    <span>📍 กรุงเทพฯ, ประเทศไทย</span>
+                    <span>📞 012-345-6789</span>
+                    <span>
+                        ✉️
+                        <a href="mailto:thanaphat@email.com">
+                            thanaphat@email.com
+                        </a>
+                    </span>
+                    <span>
+                        🔗
+                        <a href="https://linkedin.com" target="_blank">
+                            LinkedIn
+                        </a>
+                    </span>
+                </div>
+            </div>
+
         </div>
     </header>
 
-    <section id="about">
-        <h2>เกี่ยวกับฉัน</h2>
-        <p>นักพัฒนาเว็บไซต์ที่มีความกระตือรือร้นและประสบการณ์กว่า 3 ปีในการสร้างสรรค์ Web Application ที่ใช้งานง่าย มีความเชี่ยวชาญด้านการเขียนโค้ดที่สะอาด (Clean Code) และการปรับแต่งประสิทธิภาพของระบบหน้าบ้าน (Frontend Optimization)</p>
-    </section>
 
-    <section id="experience">
-        <h2>ประสบการณ์การทำงาน</h2>
-        
-        <div class="item">
-            <div class="item-header">
-                <span class="item-title">Senior Web Developer — <span class="item-company">Tech Innovation Co.</span></span>
-                <span class="item-date">2024 - ปัจจุบัน</span>
+    <main class="content">
+
+        <!-- ABOUT -->
+        <section id="about">
+
+            <div class="section-title">
+                <span class="section-number">01</span>
+                <h2>เกี่ยวกับฉัน</h2>
+                <span class="section-line"></span>
             </div>
-            <ul>
-                <li>นำทีมพัฒนาโปรเจกต์ E-commerce ด้วย React และ Node.js เพิ่มยอดผู้ใช้งานขึ้น 40%</li>
-                <li>ออกแบบโครงสร้างฐานข้อมูลใหม่ ช่วยลดเวลาโหลดของหน้าเว็บลง 1.5 วินาที</li>
-            </ul>
-        </div>
 
-        <div class="item">
-            <div class="item-header">
-                <span class="item-title">Junior Developer — <span class="item-company">Digital Solutions Agency</span></span>
-                <span class="item-date">2022 - 2024</span>
+            <p class="about">
+                นักพัฒนาเว็บไซต์ที่มีความกระตือรือร้นและประสบการณ์กว่า 3 ปี
+                ในการสร้างสรรค์ Web Application ที่ใช้งานง่าย
+                มีความเชี่ยวชาญด้านการเขียนโค้ดที่สะอาด (Clean Code)
+                และการปรับแต่งประสิทธิภาพของระบบหน้าบ้าน
+                (Frontend Optimization)
+            </p>
+
+        </section>
+
+
+        <!-- EXPERIENCE -->
+        <section id="experience">
+
+            <div class="section-title">
+                <span class="section-number">02</span>
+                <h2>ประสบการณ์การทำงาน</h2>
+                <span class="section-line"></span>
             </div>
-            <ul>
-                <li>พัฒนาและดูแลรักษาเว็บไซต์ของลูกค้ามากกว่า 15 เว็บไซต์ โดยใช้ WordPress และ HTML/CSS</li>
-                <li>ประสานงานกับทีมผู้พิจารณาออกแบบ (UI/UX) เพื่อเปลี่ยนดีไซน์ให้กลายเป็นโค้ดที่ใช้งานได้จริง</li>
-            </ul>
-        </div>
-    </section>
 
-    <section id="skills">
-        <h2>ทักษะความชำนาญ</h2>
-        <div class="skills-grid">
-            <span class="badge">HTML5 / CSS3</span>
-            <span class="badge">JavaScript (ES6+)</span>
-            <span class="badge">React.js</span>
-            <span class="badge">Node.js</span>
-            <span class="badge">SQL / MongoDB</span>
-            <span class="badge">Git & GitHub</span>
-            <span class="badge">Responsive Design</span>
-        </div>
-    </section>
+            <div class="timeline">
 
-    <section id="education">
-        <h2>ประวัติการศึกษา</h2>
-        <div class="item">
-            <div class="item-header">
-                <span class="item-title">วิทยาศาสตรบัณฑิต (วิทยาการคอมพิวเตอร์)</span>
-                <span class="item-date">2018 - 2022</span>
+                <div class="timeline-item">
+
+                    <div class="job-header">
+
+                        <div>
+                            <div class="job-title">
+                                Senior Web Developer —
+                                <span class="company">
+                                    Tech Innovation Co.
+                                </span>
+                            </div>
+                        </div>
+
+                        <span class="date">
+                            2024 - ปัจจุบัน
+                        </span>
+
+                    </div>
+
+                    <ul>
+                        <li>
+                            นำทีมพัฒนาโปรเจกต์ E-commerce ด้วย React และ Node.js
+                            เพิ่มยอดผู้ใช้งานขึ้น 40%
+                        </li>
+
+                        <li>
+                            ออกแบบโครงสร้างฐานข้อมูลใหม่
+                            ช่วยลดเวลาโหลดของหน้าเว็บลง 1.5 วินาที
+                        </li>
+                    </ul>
+
+                </div>
+
+
+                <div class="timeline-item">
+
+                    <div class="job-header">
+
+                        <div>
+                            <div class="job-title">
+                                Junior Developer —
+                                <span class="company">
+                                    Digital Solutions Agency
+                                </span>
+                            </div>
+                        </div>
+
+                        <span class="date">
+                            2022 - 2024
+                        </span>
+
+                    </div>
+
+                    <ul>
+                        <li>
+                            พัฒนาและดูแลรักษาเว็บไซต์ของลูกค้ามากกว่า 15 เว็บไซต์
+                            โดยใช้ WordPress และ HTML/CSS
+                        </li>
+
+                        <li>
+                            ประสานงานกับทีมผู้พิจารณาออกแบบ (UI/UX)
+                            เพื่อเปลี่ยนดีไซน์ให้กลายเป็นโค้ดที่ใช้งานได้จริง
+                        </li>
+                    </ul>
+
+                </div>
+
             </div>
-            <p style="color: var(--text-light);">มหาวิทยาลัยนวัตกรรมเทคโนโลยี</p>
-        </div>
-    </section>
 
-    <div class="cta-container">
-        <!-- ใส่ลิงก์สำหรับดาวน์โหลดไฟล์ PDF เรซูเม่ฉบับเต็มของคุณที่นี่ -->
-        <a href="#" class="btn">⬇️ ดาวน์โหลดเรซูเม่ฉบับ PDF</a>
-    </div>
+        </section>
+
+
+        <!-- SKILLS -->
+        <section id="skills">
+
+            <div class="section-title">
+                <span class="section-number">03</span>
+                <h2>ทักษะความชำนาญ</h2>
+                <span class="section-line"></span>
+            </div>
+
+            <div class="skills">
+
+                <span class="skill">HTML5 / CSS3</span>
+                <span class="skill">JavaScript (ES6+)</span>
+                <span class="skill">React.js</span>
+                <span class="skill">Node.js</span>
+                <span class="skill">SQL / MongoDB</span>
+                <span class="skill">Git & GitHub</span>
+                <span class="skill">Responsive Design</span>
+
+            </div>
+
+        </section>
+
+
+        <!-- EDUCATION -->
+        <section id="education">
+
+            <div class="section-title">
+                <span class="section-number">04</span>
+                <h2>ประวัติการศึกษา</h2>
+                <span class="section-line"></span>
+            </div>
+
+            <div class="education-card">
+
+                <div class="education-icon">
+                    🎓
+                </div>
+
+                <div>
+
+                    <div class="education-title">
+                        วิทยาศาสตรบัณฑิต (วิทยาการคอมพิวเตอร์)
+                    </div>
+
+                    <div class="education-school">
+                        มหาวิทยาลัยนวัตกรรมเทคโนโลยี
+                        · 2018 - 2022
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <div class="footer">
+
+            <div class="footer-text">
+                © 2026 ธนภัทร จันทร์จอม · Resume Portfolio
+            </div>
+
+            <a href="#" class="btn">
+                ⬇️ ดาวน์โหลด Resume PDF
+            </a>
+
+        </div>
+
+    </main>
+
 </div>
 
 </body>
